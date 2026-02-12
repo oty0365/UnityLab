@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace OtyPackages.Pathfinder.Runtime
+namespace OtyPackages.Pathfinder.Runtime.Scripts
 {
     [CustomEditor(typeof(WayNodesLinker))]
     public class WayNodesLinkerEditor : Editor

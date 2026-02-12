@@ -1,17 +1,17 @@
+using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace OtyPackages.Pathfinder.Runtime
+namespace OtyPackages.Pathfinder.Runtime.Scripts
 {
     public class WayNode : MonoBehaviour
     {
-    
-
-        [HideInInspector] [SerializeField] private List<WayNode> wayNodes = new List<WayNode>();
+        [HideInInspector][SerializeField] private List<WayNode> wayNodes = new List<WayNode>();
         [SerializeField] private Color currentLineColor = Color.green;
         private bool _useWeight;
         private int _weight;
+        private int _previousNodesCount;
     
         public bool UseWeight
         {
@@ -40,6 +40,7 @@ namespace OtyPackages.Pathfinder.Runtime
         
             wayNodes.Add(node);
             _wayNodesHash.Add(node);
+            _previousNodesCount++;
         }
 
         public void RemoveNode(WayNode node)
@@ -48,6 +49,7 @@ namespace OtyPackages.Pathfinder.Runtime
         
             wayNodes.Remove(node);
             _wayNodesHash.Remove(node);
+            _previousNodesCount--;
         }
         
         public WayNode[] GetNodes()
@@ -83,8 +85,9 @@ namespace OtyPackages.Pathfinder.Runtime
                     5f 
                 );
             }
+            //wayNodes.RemoveAll(node => node == null);
         }
-
+        
 #endif
     }
 }

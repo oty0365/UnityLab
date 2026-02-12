@@ -2,7 +2,7 @@ using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
 
-namespace OtyPackages.Pathfinder.Runtime
+namespace OtyPackages.Pathfinder.Runtime.Scripts
 {
     [CustomEditor(typeof(WayNode))]
     public class WayNodeEditor : Editor
@@ -15,39 +15,7 @@ namespace OtyPackages.Pathfinder.Runtime
             Add,
             Remove
         }
-        private ReorderableList _reorderableList;
 
-        private void OnEnable()
-        {
-            var prop = serializedObject.FindProperty("wayNodes");
-            _reorderableList = new ReorderableList(serializedObject, prop, true, true, true, true)
-            {
-                onRemoveCallback = (list) =>
-                {
-                    var element = prop.GetArrayElementAtIndex(list.index);
-                    var nodeToRemove = element.objectReferenceValue as WayNode;
-                    if (nodeToRemove != null)
-                    {
-                        Undo.RecordObject(target, "Remove Node Reference");
-                        ((WayNode)target).RemoveNode(nodeToRemove);
-                    }
-                    else
-                    {
-                        ReorderableList.defaultBehaviours.DoRemoveButton(list);
-                    }
-                    EditorUtility.SetDirty(target);
-                },
-                drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
-                {
-                    var element = prop.GetArrayElementAtIndex(index);
-                    rect.y += 2;
-                    WayNode node = element.objectReferenceValue as WayNode;
-                    string label = (node != null) ? node.name : "Empty Node";
-                    EditorGUI.PropertyField(new Rect(rect.x, rect.y, rect.width, EditorGUIUtility.singleLineHeight), element, new GUIContent(label));
-                },
-                
-            };
-        }
         private void OnSceneGUI()
         {
             WayNode currentNode = (WayNode)target;
@@ -91,6 +59,7 @@ namespace OtyPackages.Pathfinder.Runtime
         public override void OnInspectorGUI()
         {
             var script = (WayNode)target;
+            
             EditorGUI.BeginChangeCheck();
             script.UseWeight = EditorGUILayout.Toggle("Use Weight", script.UseWeight);
             if (script.UseWeight)
@@ -101,10 +70,78 @@ namespace OtyPackages.Pathfinder.Runtime
             {
                 EditorUtility.SetDirty(script);
             }
+            
+            EditorGUILayout.Space(10);
+            EditorGUILayout.LabelField("Drag & Drop Connection", EditorStyles.boldLabel);
+            
+            EditorGUILayout.BeginVertical(GUI.skin.box);
+            EditorGUILayout.LabelField("Drop to Connect", EditorStyles.miniLabel);
+            Rect dropAreaAdd = GUILayoutUtility.GetRect(0, 40, GUILayout.ExpandWidth(true));
+            GUI.Box(dropAreaAdd, "Drop WayNode Here to Add Connection", EditorStyles.helpBox);
+            HandleDragAndDrop(dropAreaAdd, script, true);
+            EditorGUILayout.EndVertical();
+            
+            EditorGUILayout.Space(5);
+            
+            EditorGUILayout.BeginVertical(GUI.skin.box);
+            EditorGUILayout.LabelField("Drop to Disconnect", EditorStyles.miniLabel);
+            Rect dropAreaRemove = GUILayoutUtility.GetRect(0, 40, GUILayout.ExpandWidth(true));
+            GUI.Box(dropAreaRemove, "Drop WayNode Here to Remove Connection", EditorStyles.helpBox);
+            HandleDragAndDrop(dropAreaRemove, script, false);
+            EditorGUILayout.EndVertical();
+            
+            EditorGUILayout.Space(10);
             DrawDefaultInspector(); 
+            
             serializedObject.Update();
-            _reorderableList.DoLayoutList(); 
             serializedObject.ApplyModifiedProperties();
+        }
+
+        private void HandleDragAndDrop(Rect dropArea, WayNode currentNode, bool isAddMode)
+        {
+            Event evt = Event.current;
+            
+            switch (evt.type)
+            {
+                case EventType.DragUpdated:
+                case EventType.DragPerform:
+                    if (!dropArea.Contains(evt.mousePosition))
+                        return;
+                    
+                    DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
+                    
+                    if (evt.type == EventType.DragPerform)
+                    {
+                        DragAndDrop.AcceptDrag();
+                        
+                        foreach (Object draggedObject in DragAndDrop.objectReferences)
+                        {
+                            GameObject go = draggedObject as GameObject;
+                            if (go != null)
+                            {
+                                WayNode draggedNode = go.GetComponent<WayNode>();
+                                if (draggedNode != null && draggedNode != currentNode)
+                                {
+                                    if (isAddMode)
+                                    {
+                                        Undo.RecordObject(currentNode, "Connect Nodes via Drag");
+                                        currentNode.AddNode(draggedNode);
+                                        Debug.Log($"Connected: {currentNode.name} -> {draggedNode.name}");
+                                    }
+                                    else
+                                    {
+                                        Undo.RecordObject(currentNode, "Disconnect Nodes via Drag");
+                                        currentNode.RemoveNode(draggedNode);
+                                        Debug.Log($"Disconnected: {currentNode.name} -X- {draggedNode.name}");
+                                    }
+                                    EditorUtility.SetDirty(currentNode);
+                                }
+                            }
+                        }
+                    }
+                    evt.Use();
+                    break;
+            }
         }
 
         private void DrawConnectionLine()
@@ -143,7 +180,7 @@ namespace OtyPackages.Pathfinder.Runtime
                     }
                     else if (_selectionType == SelectionType.Remove)
                     {
-                        Undo.RecordObject(endNode, "Disconnect Nodes");
+                        Undo.RecordObject(_startNode, "Disconnect Nodes");
                         _startNode.RemoveNode(endNode);
                     }
                     EditorUtility.SetDirty(_startNode);

@@ -1,7 +1,9 @@
+using System;
 using UnityEngine;
 
-namespace OtyPackages.Pathfinder.Runtime
+namespace OtyPackages.Pathfinder.Runtime.Scripts
 {
+    [Serializable]
     public class NodeData
     {
         public bool canGo;
