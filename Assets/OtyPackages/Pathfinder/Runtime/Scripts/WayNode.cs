@@ -9,6 +9,7 @@ namespace OtyPackages.Pathfinder.Runtime.Scripts
     {
         [HideInInspector][SerializeField] private List<WayNode> wayNodes = new List<WayNode>();
         [SerializeField] private Color currentLineColor = Color.green;
+        [SerializeField] private bool canGo;
         private bool _useWeight;
         private int _weight;
         private int _previousNodesCount;

@@ -7,4 +7,5 @@ public class PathfindTile : Tile
 {
     public bool ableToGo;
     public float coast;
+    
 }
