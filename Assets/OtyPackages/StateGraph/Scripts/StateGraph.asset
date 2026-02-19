@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b7952b2b70411c46bb457686a138251, type: 3}
+  m_Name: StateGraph
+  m_EditorClassIdentifier: Assembly-CSharp-Editor::STGraphDataSO
+  nodeDatas:
+  - nodeName: Entry
+    nodeID: 192369e1-1777-49df-afc1-d6d1f32bb12c
+    nodeType: 0
+    nodePosition: {x: 228.8, y: 297.6}
+    jumpID: 
+    connections:
+    - e44a0be1-2ff4-43cd-bbea-3edabf8bbe82
+    - db2c4cfd-f0c1-4402-88d1-ffe5358a56d2
+    - 41be7c31-92ad-42ae-ad8d-bda7c9abc4c7
+  - nodeName: Walk
+    nodeID: db2c4cfd-f0c1-4402-88d1-ffe5358a56d2
+    nodeType: 1
+    nodePosition: {x: 594.4, y: 332.80002}
+    jumpID: 
+    connections: []
+  - nodeName: Idle
+    nodeID: e44a0be1-2ff4-43cd-bbea-3edabf8bbe82
+    nodeType: 1
+    nodePosition: {x: 500, y: 158.40001}
+    jumpID: 
+    connections: []
+  - nodeName: Dash
+    nodeID: 41be7c31-92ad-42ae-ad8d-bda7c9abc4c7
+    nodeType: 1
+    nodePosition: {x: 500, y: 515.19995}
+    jumpID: 
+    connections: []
