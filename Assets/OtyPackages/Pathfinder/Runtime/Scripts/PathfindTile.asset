@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 825cf0cabb434b2449d1f50adc43eb83, type: 3}
   m_Name: PathfindTile
   m_EditorClassIdentifier: Assembly-CSharp::PathfindTile
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Transform:
     e00: 1
