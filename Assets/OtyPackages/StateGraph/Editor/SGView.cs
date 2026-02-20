@@ -72,7 +72,7 @@ namespace OtyPackages.StateGraph.Editor
                 NodeType.Entry => new SGEntryNodeView(data.nodeName, data.nodeID,data.stateLogic),
                 NodeType.State => new SGStateNodeView(data.nodeName, data.nodeID,data.stateLogic),
                 NodeType.Exit => new SGExitNodeView(data.nodeName, data.nodeID,data.stateLogic),
-                NodeType.Portal => new SGPortalNodeView(data.nodeName, data.nodeID),
+                NodeType.Portal => new SGPortalNodeView(data.nodeName, data.nodeID,data.jumpID),
                 _ => throw new ArgumentOutOfRangeException()
             };
             

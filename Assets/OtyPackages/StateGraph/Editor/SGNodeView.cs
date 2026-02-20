@@ -102,8 +102,9 @@ public class {fileName}SO : ScriptableObject, IState
             mainContainer.Add(createScriptBtn);
         }
 
-        protected void AddPortField()
+        protected void AddPortField(string portID)
         {
+            PortID = portID;
             var idField = new TextField { value = PortID };
             idField.RegisterValueChangedCallback(evt =>
             {
