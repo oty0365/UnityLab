@@ -1,15 +1,15 @@
-using OtyPackages.StateGraph.Editor;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace OtyPackages.StateGraph.Scripts
+namespace OtyPackages.StateGraph.Editor
 {
     public class STWindow : EditorWindow
     {
         private SGView _graphView;
         private SGDataSO _currentData;
+        private Toolbar _toolbar;
     
         public static void OpenWithData(SGDataSO data)
         {
@@ -23,8 +23,6 @@ namespace OtyPackages.StateGraph.Scripts
     
         private void OnEnable()
         {
-            CreateToolbar();
-            
             _graphView = new SGView();
             _graphView.StretchToParentSize();
             _graphView.OnViewChanged += ChangeDetected;
@@ -41,7 +39,8 @@ namespace OtyPackages.StateGraph.Scripts
         private void CreateToolbar()
         {
             Toolbar toolbar = new Toolbar();
-            toolbar.style.height = 10;
+            _toolbar = toolbar;
+            toolbar.style.height = 30;
             toolbar.style.paddingLeft = 10;
             toolbar.style.alignItems = Align.Center;
             toolbar.style.backgroundColor = new Color(0.12f, 0.12f, 0.12f);
@@ -82,7 +81,7 @@ namespace OtyPackages.StateGraph.Scripts
                 saveButton.style.backgroundColor = graphBgColor;
                 saveButton.style.color = new Color(0.7f, 0.7f, 0.7f);
             });
-
+            
             toolbar.Add(saveButton);
             rootVisualElement.Add(toolbar);
         }
@@ -91,6 +90,10 @@ namespace OtyPackages.StateGraph.Scripts
         {
             if (_currentData == null) return;
             titleContent = new GUIContent(_currentData.name + "*");
+            if (_toolbar == null)
+            {
+                CreateToolbar();
+            }
         }
 
         public void LoadDataToView()

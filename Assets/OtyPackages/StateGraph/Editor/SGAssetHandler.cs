@@ -1,5 +1,4 @@
 using OtyPackages.StateGraph.Scripts;
-using OtyPackages.StateTree.Editor;
 using UnityEditor;
 using UnityEditor.Callbacks;
 

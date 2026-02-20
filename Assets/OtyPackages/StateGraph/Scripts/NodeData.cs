@@ -19,4 +19,5 @@ public class NodeData
     public Vector2 nodePosition;
     public string jumpID;
     public List<string> connections = new List<string>();
+    public ScriptableObject stateLogic;
 }

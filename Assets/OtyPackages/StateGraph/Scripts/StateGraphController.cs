@@ -1,7 +1,7 @@
 using OtyPackages.StateGraph.Editor;
 using UnityEngine;
 
-namespace OtyPackages.StateGraph.Runtime
+namespace OtyPackages.StateGraph.Scripts
 {
     public class StateGraphController : MonoBehaviour
     {

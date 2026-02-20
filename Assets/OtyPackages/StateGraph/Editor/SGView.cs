@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Linq; // 추가
-using OtyPackages.StateTree.Editor;
+using System.Linq;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Edge = UnityEditor.Experimental.GraphView.Edge;
 
-namespace OtyPackages.StateGraph.Scripts
+namespace OtyPackages.StateGraph.Editor
 {
     public class SGView : GraphView
     {
@@ -26,6 +25,7 @@ namespace OtyPackages.StateGraph.Scripts
             this.AddManipulator(new ContentZoomer());
             this.AddManipulator(new SelectionDragger());
             this.AddManipulator(new RectangleSelector());
+
             
             SetupContextMenu();
             graphViewChanged = OnGraphViewChanged;
@@ -69,14 +69,16 @@ namespace OtyPackages.StateGraph.Scripts
         {
             SGNodeView nodeView = data.nodeType switch
             {
-                NodeType.Entry => new SGEntryNodeView(data.nodeName, data.nodeID),
-                NodeType.State => new SGStateNodeView(data.nodeName, data.nodeID),
-                NodeType.Exit => new SGExitNodeView(data.nodeName, data.nodeID),
+                NodeType.Entry => new SGEntryNodeView(data.nodeName, data.nodeID,data.stateLogic),
+                NodeType.State => new SGStateNodeView(data.nodeName, data.nodeID,data.stateLogic),
+                NodeType.Exit => new SGExitNodeView(data.nodeName, data.nodeID,data.stateLogic),
                 NodeType.Portal => new SGPortalNodeView(data.nodeName, data.nodeID),
                 _ => throw new ArgumentOutOfRangeException()
             };
             
             nodeView.OnNameUpdated += UpdateNodeName;
+            nodeView.OnStateLogicUpdated += UpdateStateLogic;
+            nodeView.OnPortUpdated += UpdatePortID;
             nodeView.SetPosition(new Rect(data.nodePosition, new Vector2(150, 200)));
             AddElement(nodeView);
             
@@ -199,6 +201,22 @@ namespace OtyPackages.StateGraph.Scripts
             if (_nodeDict.TryGetValue(nodeID, out var data))
             {
                 data.nodeName = nodeName;
+            }
+        }
+
+        private void UpdatePortID(string nodeID, string portID)
+        {
+            if (_nodeDict.TryGetValue(nodeID, out var data))
+            {
+                data.jumpID = portID;
+            }
+        }
+
+        private void UpdateStateLogic(string nodeID, ScriptableObject state)
+        {
+            if (_nodeDict.TryGetValue(nodeID, out var data))
+            {
+                data.stateLogic = state;
             }
         }
     }
