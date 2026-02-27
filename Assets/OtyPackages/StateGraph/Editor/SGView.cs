@@ -12,9 +12,12 @@ namespace OtyPackages.StateGraph.Editor
     {
         public event Action OnViewChanged;
         public event Action OnSave;
-        
+
+        private NodeData _entryNode;
+        private SGNodeView _entryNodeView;
         private Dictionary<string, NodeData> _nodeDict = new Dictionary<string, NodeData>();
         private Dictionary<string, SGNodeView> _nodeViewDict = new Dictionary<string, SGNodeView>();
+        private List<NodeData> _nodeList =  new List<NodeData>();
         
         public SGView()
         {
@@ -44,11 +47,6 @@ namespace OtyPackages.StateGraph.Editor
             var menuManipulator = new ContextualMenuManipulator(menuEvent =>
             {
                 var mousePos = menuEvent.mousePosition;
-                
-                menuEvent.menu.AppendAction("Add Entry", action => CreateNode(new NodeData {
-                    nodeType = NodeType.Entry, nodeName = "New Entry", nodeID = Guid.NewGuid().ToString(), nodePosition = mousePos,
-                    connections = new List<string>(), jumpID = null 
-                }));
                 menuEvent.menu.AppendAction("Add State", action => CreateNode(new NodeData {
                     nodeType = NodeType.State, nodeName = "New State", nodeID = Guid.NewGuid().ToString(), nodePosition = mousePos,
                     connections = new List<string>(), jumpID = null
@@ -65,26 +63,44 @@ namespace OtyPackages.StateGraph.Editor
             this.AddManipulator(menuManipulator);
         }
         
-        private void CreateNode(NodeData data)
+        public void CreateNode(NodeData data)
         {
-            SGNodeView nodeView = data.nodeType switch
+            SGNodeView nodeView;
+            switch (data.nodeType)
             {
-                NodeType.Entry => new SGEntryNodeView(data.nodeName, data.nodeID,data.stateLogic),
-                NodeType.State => new SGStateNodeView(data.nodeName, data.nodeID,data.stateLogic),
-                NodeType.Exit => new SGExitNodeView(data.nodeName, data.nodeID,data.stateLogic),
-                NodeType.Portal => new SGPortalNodeView(data.nodeName, data.nodeID,data.jumpID),
-                _ => throw new ArgumentOutOfRangeException()
-            };
-            
+                case NodeType.Entry:
+                    nodeView = new SGEntryNodeView(data);
+                    break;
+                case NodeType.State:
+                    nodeView = new SGStateNodeView(data);
+                    break;
+                case NodeType.Exit:
+                    nodeView = new SGExitNodeView(data);
+                    break;
+                case NodeType.Portal:
+                    nodeView = new SGPortalNodeView(data);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
             nodeView.OnNameUpdated += UpdateNodeName;
             nodeView.OnStateLogicUpdated += UpdateStateLogic;
             nodeView.OnPortUpdated += UpdatePortID;
             nodeView.SetPosition(new Rect(data.nodePosition, new Vector2(150, 200)));
             AddElement(nodeView);
-            
+
+            if (data.nodeType == NodeType.Entry)
+            {
+                _entryNodeView = nodeView;
+                _entryNode = data;
+            }
+            else
+            {
+                _nodeList.Add(data);
+            }
             _nodeDict.Add(data.nodeID, data);
             _nodeViewDict.Add(data.nodeID, nodeView);
-
             OnViewChanged?.Invoke();
         }
     
@@ -155,7 +171,12 @@ namespace OtyPackages.StateGraph.Editor
 
         public List<NodeData> ExportNodeDatasAsList()
         {
-            return _nodeDict.Values.ToList();
+            return _nodeList;
+        }
+
+        public NodeData ExportEntryNodeData()
+        {
+            return _entryNode;
         }
 
         public void ImportDatas(List<NodeData> datas)
@@ -186,6 +207,22 @@ namespace OtyPackages.StateGraph.Editor
             }
         }
 
+        public void ImportEntryNodeData(NodeData heaNodeData)
+        {
+            CreateNode(heaNodeData);
+            if (heaNodeData.connections == null) return;
+
+            foreach (var targetID in heaNodeData.connections)
+            {
+                if (_nodeViewDict.TryGetValue(heaNodeData.nodeID, out var sourceView) && 
+                    _nodeViewDict.TryGetValue(targetID, out var targetView))
+                {
+                    LinkNodes(sourceView, targetView);
+                }
+            }
+            
+        }
+
         private void LinkNodes(SGNodeView outNode, SGNodeView inNode)
         {
             var outputPort = outNode.outputContainer.Q<Port>(); 
@@ -196,27 +233,47 @@ namespace OtyPackages.StateGraph.Editor
             AddElement(edge);
         }
 
-        private void UpdateNodeName(string nodeID, string nodeName)
+        private void UpdateNodeName(string nodeID, string nodeName, NodeType nodeType)
         {
-            if (_nodeDict.TryGetValue(nodeID, out var data))
+            if (nodeType == NodeType.Entry)
             {
-                data.nodeName = nodeName;
+                _entryNode.nodeName = nodeName;
+            }
+            else
+            {
+                if (_nodeDict.TryGetValue(nodeID, out var data))
+                {
+                    data.nodeName = nodeName;
+                }
             }
         }
 
-        private void UpdatePortID(string nodeID, string portID)
+        private void UpdatePortID(string nodeID, string portID,NodeType nodeType)
         {
-            if (_nodeDict.TryGetValue(nodeID, out var data))
+            if (nodeType == NodeType.Entry)
             {
-                data.jumpID = portID;
+                _entryNode.jumpID = portID;
+            }
+            else
+            {
+                if (_nodeDict.TryGetValue(nodeID, out var data))
+                {
+                    data.jumpID = portID;
+                }
             }
         }
 
-        private void UpdateStateLogic(string nodeID, ScriptableObject state)
+        private void UpdateStateLogic(string nodeID, ScriptableObject state, NodeType nodeType)
         {
-            if (_nodeDict.TryGetValue(nodeID, out var data))
+            if (nodeType == NodeType.Entry)
             {
-                data.stateLogic = state;
+                _entryNode.stateLogic = state;
+            }
+            else{
+                if (_nodeDict.TryGetValue(nodeID, out var data))
+                {
+                    data.stateLogic = state;
+                }
             }
         }
     }

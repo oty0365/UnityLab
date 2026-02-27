@@ -12,51 +12,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b7952b2b70411c46bb457686a138251, type: 3}
   m_Name: StateGraph
   m_EditorClassIdentifier: Assembly-CSharp::OtyPackages.StateGraph.Editor.SGDataSO
-  nodeDatas:
-  - nodeName: Entry
-    nodeID: a866adf0-2104-4494-84a1-ad2b1c72880e
+  entryNode:
+    nodeName: New Entry
+    nodeID: 2bf3f3c7-fd5a-400e-9d55-3b25fa09fb6a
     nodeType: 0
-    nodePosition: {x: 82.4, y: 196.8}
+    nodePosition: {x: 0, y: 191.20001}
     jumpID: 
     connections:
-    - 9e387c21-80ba-44a4-992a-d4aae1f4aec5
-    - 1f95342a-f801-485b-90cc-cef0e48b828e
-    - ff16cdc2-f13f-4d97-9037-2c238445197b
-    stateLogic: {fileID: 11400000, guid: fcd15b20efb4d8a4ba71846519cc6503, type: 2}
-  - nodeName: Idle
-    nodeID: 1f95342a-f801-485b-90cc-cef0e48b828e
+    - f06e5e43-9081-4721-9acc-8190f5b3066a
+    - 276b782b-a4e6-4571-84a2-9ed1ef00ece0
+    - 09604004-dd91-431e-ad46-9004eb3db7a9
+    stateLogic: {fileID: 11400000, guid: 278dac3278e6d6c49ba85713da341f59, type: 2}
+  nodeDatas:
+  - nodeName: New State
+    nodeID: f06e5e43-9081-4721-9acc-8190f5b3066a
     nodeType: 1
-    nodePosition: {x: 404.8, y: 42.4}
-    jumpID: 
-    connections:
-    - 326c9197-532e-4ab1-b91a-c6ed2427c5aa
-    stateLogic: {fileID: 0}
-  - nodeName: Walk
-    nodeID: 9e387c21-80ba-44a4-992a-d4aae1f4aec5
-    nodeType: 1
-    nodePosition: {x: 404.8, y: 197.6}
-    jumpID: 
-    connections:
-    - 8a523104-375a-42bc-8051-c8c433e7dcd4
-    stateLogic: {fileID: 0}
-  - nodeName: Dash
-    nodeID: ff16cdc2-f13f-4d97-9037-2c238445197b
-    nodeType: 1
-    nodePosition: {x: 404.8, y: 324}
+    nodePosition: {x: 349.6, y: 44.799995}
     jumpID: 
     connections: []
     stateLogic: {fileID: 0}
-  - nodeName: Port
-    nodeID: 326c9197-532e-4ab1-b91a-c6ed2427c5aa
-    nodeType: 2
-    nodePosition: {x: 659.2, y: 56.799995}
-    jumpID: 1f95342a-f801-485b-90cc-cef0e48b828e
+  - nodeName: New State
+    nodeID: 276b782b-a4e6-4571-84a2-9ed1ef00ece0
+    nodeType: 1
+    nodePosition: {x: 360, y: 212}
+    jumpID: 
     connections: []
     stateLogic: {fileID: 0}
-  - nodeName: New Exit
-    nodeID: 8a523104-375a-42bc-8051-c8c433e7dcd4
-    nodeType: 3
-    nodePosition: {x: 670.4, y: 196.8}
+  - nodeName: New State
+    nodeID: 09604004-dd91-431e-ad46-9004eb3db7a9
+    nodeType: 1
+    nodePosition: {x: 349.6, y: 404.80002}
     jumpID: 
     connections: []
     stateLogic: {fileID: 0}

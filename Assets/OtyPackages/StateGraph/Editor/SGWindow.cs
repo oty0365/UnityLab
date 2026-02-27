@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -19,6 +21,7 @@ namespace OtyPackages.StateGraph.Editor
             window.CreateToolbar();
             window.LoadDataToView();
             window.Show();
+            
         }
     
         private void OnEnable()
@@ -32,6 +35,7 @@ namespace OtyPackages.StateGraph.Editor
             
             if (_currentData != null)
             {
+                Debug.Log(_currentData);
                 LoadDataToView();
             }
         }
@@ -102,6 +106,22 @@ namespace OtyPackages.StateGraph.Editor
             {
                 _graphView.ImportDatas(_currentData.nodeDatas);
             }
+            Debug.Log(_currentData.entryNode);
+            if (string.IsNullOrEmpty(_currentData.entryNode.nodeID))
+            {
+                Debug.Log("엔트리 노드 생성");
+                _graphView?.CreateNode(new NodeData
+                {
+                    nodeType = NodeType.Entry, nodeName = "New Entry", nodeID = Guid.NewGuid().ToString(),
+                    nodePosition = new Vector2(0,0),
+                    connections = new List<string>(), jumpID = null
+                });
+                _currentData.entryNode = _graphView?.ExportEntryNodeData();
+            }
+            else
+            {
+                _graphView?.ImportEntryNodeData(_currentData.entryNode);
+            }
         }
 
         private void SaveDetected()
@@ -109,6 +129,7 @@ namespace OtyPackages.StateGraph.Editor
             if (_currentData == null) return;
             titleContent = new GUIContent(_currentData.name);
             _currentData.nodeDatas = _graphView.ExportNodeDatasAsList();
+            _currentData.entryNode = _graphView?.ExportEntryNodeData();
             EditorUtility.SetDirty(_currentData);
             AssetDatabase.SaveAssets();
             

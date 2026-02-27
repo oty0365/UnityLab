@@ -5,7 +5,7 @@ namespace OtyPackages.StateGraph.Editor
 {
     public class SGStateNodeView : SGNodeView
     {
-        public SGStateNodeView(string nodeName,string nodeID,ScriptableObject scriptableObject) : base(nodeName, nodeID)
+        public SGStateNodeView(NodeData data) : base(data)
         {
             var inputPort = InstantiatePort(Orientation.Horizontal, Direction.Input, Port.Capacity.Multi, typeof(float));
             inputPort.portName = "Enter";
@@ -15,7 +15,7 @@ namespace OtyPackages.StateGraph.Editor
             outputPort.portName = "Next";
             outputContainer.Add(outputPort);
             titleContainer.style.backgroundColor = titleContainer.style.backgroundColor;
-            AddScriptField(scriptableObject);
+            AddScriptField(data.stateLogic);
             Refresh();
         }
     }

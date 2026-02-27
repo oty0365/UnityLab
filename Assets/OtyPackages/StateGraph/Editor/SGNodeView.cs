@@ -10,18 +10,19 @@ namespace OtyPackages.StateGraph.Editor
 {
     public class SGNodeView : Node
     {
-        public event Action<string,string> OnNameUpdated;
-        public event Action<string, ScriptableObject> OnStateLogicUpdated;
-        public event Action<string,string> OnPortUpdated;
+        public event Action<string,string,NodeType> OnNameUpdated;
+        public event Action<string, ScriptableObject,NodeType> OnStateLogicUpdated;
+        public event Action<string,string,NodeType> OnPortUpdated;
         public string NodeName{get;protected set;}
-
+        public NodeType NodeType{get;protected set;}
         public string NodeID { get; protected set; }
         public string PortID {get; protected set;}
-        protected SGNodeView(string nodeName,string nodeID)
+        protected SGNodeView(NodeData data)
         {
-            NodeID = nodeID;
-            NodeName = nodeName;
-            title = nodeName;
+            NodeID = data.nodeID;
+            NodeName = data.nodeName;
+            NodeType = data.nodeType;
+            title = data.nodeName;
             var titleLabel = titleContainer.Q<Label>("title-label");
             if (titleLabel != null) titleLabel.style.display = DisplayStyle.None;
 
@@ -30,7 +31,7 @@ namespace OtyPackages.StateGraph.Editor
             {
                 title = evt.newValue; 
                 NodeName = evt.newValue; 
-                OnNameUpdated?.Invoke(NodeID,NodeName);
+                OnNameUpdated?.Invoke(NodeID,NodeName,NodeType);
             });
             nameField.style.flexGrow = 1;
             nameField.style.fontSize = 14;
@@ -51,8 +52,14 @@ namespace OtyPackages.StateGraph.Editor
 using UnityEngine;
 public class {fileName}SO : ScriptableObject, IState
 {{
+    private GameObject _actor;
 
-    public void OnStateEnter()
+    public bool OnStateCheck(GameObject actor)
+    {{
+        return true;
+    }}
+
+    public void OnStateEnter(GameObject actor)
     {{
     }}
 
@@ -88,7 +95,7 @@ public class {fileName}SO : ScriptableObject, IState
             {
                 if (evt.newValue is IState || evt.newValue == null)
                 {
-                    OnStateLogicUpdated?.Invoke(NodeID,(ScriptableObject)evt.newValue);
+                    OnStateLogicUpdated?.Invoke(NodeID,(ScriptableObject)evt.newValue,NodeType);
                 }
             });
             contentContainer.Add(objectField);
@@ -109,7 +116,7 @@ public class {fileName}SO : ScriptableObject, IState
             idField.RegisterValueChangedCallback(evt =>
             {
                 PortID = evt.newValue;
-                OnPortUpdated?.Invoke(NodeID, PortID);
+                OnPortUpdated?.Invoke(NodeID,PortID,NodeType);
             });
             idField.style.maxWidth = 150; 
             

@@ -5,14 +5,14 @@ namespace OtyPackages.StateGraph.Editor
 {
     public class SGEntryNodeView : SGNodeView
     {
-    
-        public SGEntryNodeView(string nodeName,string nodeID,ScriptableObject scriptableObject) : base(nodeName,nodeID)
+        public SGEntryNodeView(NodeData data) : base(data)
         {
+            capabilities &= ~Capabilities.Deletable;
             var outputPort = InstantiatePort(Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, typeof(float));
             outputPort.portName = "Next";
             outputContainer.Add(outputPort);
             titleContainer.style.backgroundColor = Color.darkOliveGreen;
-            AddScriptField(scriptableObject);
+            AddScriptField(data.stateLogic);
             Refresh();
         }
     }

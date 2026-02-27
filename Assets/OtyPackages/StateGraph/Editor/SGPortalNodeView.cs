@@ -8,15 +8,14 @@ namespace OtyPackages.StateGraph.Editor
 {
     public class SGPortalNodeView : SGNodeView
     {
-        public SGPortalNodeView(string nodeName,string nodeID,string portID) : base(nodeName,nodeID)
+        public SGPortalNodeView(NodeData data) : base(data)
         {
             var inputPort = InstantiatePort(Orientation.Horizontal, Direction.Input, Port.Capacity.Multi, typeof(float));
             inputPort.portName = "Enter";
             inputContainer.Add(inputPort);
             titleContainer.style.backgroundColor = Color.cornflowerBlue;
-            AddPortField(portID);
+            AddPortField(data.jumpID);
             Refresh();
         }
-    
     }
 }
