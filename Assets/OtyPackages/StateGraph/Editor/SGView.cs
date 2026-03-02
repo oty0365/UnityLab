@@ -17,7 +17,6 @@ namespace OtyPackages.StateGraph.Editor
         private SGNodeView _entryNodeView;
         private Dictionary<string, NodeData> _nodeDict = new Dictionary<string, NodeData>();
         private Dictionary<string, SGNodeView> _nodeViewDict = new Dictionary<string, SGNodeView>();
-        private List<NodeData> _nodeList =  new List<NodeData>();
         
         public SGView()
         {
@@ -95,10 +94,6 @@ namespace OtyPackages.StateGraph.Editor
                 _entryNodeView = nodeView;
                 _entryNode = data;
             }
-            else
-            {
-                _nodeList.Add(data);
-            }
             _nodeDict.Add(data.nodeID, data);
             _nodeViewDict.Add(data.nodeID, nodeView);
             OnViewChanged?.Invoke();
@@ -171,7 +166,7 @@ namespace OtyPackages.StateGraph.Editor
 
         public List<NodeData> ExportNodeDatasAsList()
         {
-            return _nodeList;
+            return _nodeDict.Values.ToList();
         }
 
         public NodeData ExportEntryNodeData()
@@ -189,7 +184,10 @@ namespace OtyPackages.StateGraph.Editor
             
             foreach (var data in datas)
             {
-                CreateNode(data);
+                if(data.nodeType!= NodeType.Entry)
+                {
+                    CreateNode(data);
+                }
             }
             
             foreach (var data in datas)

@@ -1,4 +1,6 @@
 
+using OtyPackages.StateGraph.Scripts;
+using System.Collections;
 using UnityEngine;
 public class NewEntryStateSO : ScriptableObject, IState
 {
@@ -11,11 +13,20 @@ public class NewEntryStateSO : ScriptableObject, IState
 
     public void OnStateEnter(GameObject actor)
     {
-        Debug.Log("Enter");
-        Debug.Log(actor);
+        _actor = actor;
+        Debug.Log("OpenStackFrame");
+        _actor.GetComponent<StateGraphController>().ExecuteCoroutine(OnStateUpdate());
+        Debug.Log("CloseStackFrame");
     }
 
     public void OnStateExit()
     {
+        Debug.Log("Exited New Entry State");
+    }
+    public IEnumerator OnStateUpdate()
+    {
+        yield return null;
+        _actor.GetComponent<StateGraphController>().CheckStatesToEnter();
+        yield break;
     }
 }

@@ -50,6 +50,8 @@ namespace OtyPackages.StateGraph.Editor
         
             string template = $@"
 using UnityEngine;
+using System.Collections;
+
 public class {fileName}SO : ScriptableObject, IState
 {{
     private GameObject _actor;
@@ -65,6 +67,10 @@ public class {fileName}SO : ScriptableObject, IState
 
     public void OnStateExit()
     {{
+    }}
+    public IEnumerator OnStateUpdate()
+    {{
+        yield break;
     }}
 }}
 ";

@@ -14,34 +14,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::OtyPackages.StateGraph.Editor.SGDataSO
   entryNode:
     nodeName: New Entry
-    nodeID: 2bf3f3c7-fd5a-400e-9d55-3b25fa09fb6a
+    nodeID: 6eea3f3a-49bb-451b-90d7-13fa615bf566
     nodeType: 0
-    nodePosition: {x: 0, y: 191.20001}
+    nodePosition: {x: 4, y: 245}
     jumpID: 
     connections:
-    - f06e5e43-9081-4721-9acc-8190f5b3066a
-    - 276b782b-a4e6-4571-84a2-9ed1ef00ece0
-    - 09604004-dd91-431e-ad46-9004eb3db7a9
+    - 841de477-4d61-4442-82fc-72fa66f3c1cc
     stateLogic: {fileID: 11400000, guid: 278dac3278e6d6c49ba85713da341f59, type: 2}
   nodeDatas:
   - nodeName: New State
-    nodeID: f06e5e43-9081-4721-9acc-8190f5b3066a
+    nodeID: 841de477-4d61-4442-82fc-72fa66f3c1cc
     nodeType: 1
-    nodePosition: {x: 349.6, y: 44.799995}
+    nodePosition: {x: 306, y: 245}
     jumpID: 
     connections: []
-    stateLogic: {fileID: 0}
-  - nodeName: New State
-    nodeID: 276b782b-a4e6-4571-84a2-9ed1ef00ece0
-    nodeType: 1
-    nodePosition: {x: 360, y: 212}
+    stateLogic: {fileID: 11400000, guid: c30ada92024ecd441961d3a746322a64, type: 2}
+  - nodeName: New Entry
+    nodeID: 6eea3f3a-49bb-451b-90d7-13fa615bf566
+    nodeType: 0
+    nodePosition: {x: 4, y: 245}
     jumpID: 
-    connections: []
-    stateLogic: {fileID: 0}
-  - nodeName: New State
-    nodeID: 09604004-dd91-431e-ad46-9004eb3db7a9
-    nodeType: 1
-    nodePosition: {x: 349.6, y: 404.80002}
-    jumpID: 
-    connections: []
-    stateLogic: {fileID: 0}
+    connections:
+    - 841de477-4d61-4442-82fc-72fa66f3c1cc
+    stateLogic: {fileID: 11400000, guid: 278dac3278e6d6c49ba85713da341f59, type: 2}
